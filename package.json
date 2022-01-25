@@ -13,10 +13,12 @@
     "apollo-server": "^3.6.2",
     "bcryptjs": "^2.4.3",
     "graphql": "^16.2.0",
+    "graphql-subscriptions": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.1.7"
   },
   "devDependencies": {
+    "apollo-server-express": "^3.6.2",
     "nodemon": "^2.0.15"
   }
 }
