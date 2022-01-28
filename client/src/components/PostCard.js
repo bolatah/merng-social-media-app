@@ -4,13 +4,7 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 
 function PostCard({
-  body,
-  createdAt,
-  id,
-  username,
-  likeCount,
-  commentCount,
-  likes,
+  post: { body, createdAt, id, username, likeCount, commentCount, likes },
 }) {
   function likePost() {
     console.log("like post!!");

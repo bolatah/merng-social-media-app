@@ -1,5 +1,5 @@
-const { AuthenticationError, UserInputError } = require('apollo-server');
-const { argsToArgsConfig } = require('graphql/type/definition');
+const { AuthenticationError, UserInputError } = require("apollo-server");
+const { argsToArgsConfig } = require("graphql/type/definition");
 const Post = require("../../models/Post");
 const checkAuth = require("../../utils/check-auth");
 
@@ -30,19 +30,19 @@ module.exports = {
     async createPost(_, { body }, context) {
       const user = checkAuth(context);
 
-      if(args.body.trim()=== ''){
-        throw new Error ('Post body not be empty')
+      if (body.trim() === "") {
+        throw new Error("Post body not be empty");
       }
 
       const newPost = new Post({
         body,
         user: user.id,
         username: user.username,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       });
       const post = await newPost.save();
 
-      context.pubsub.publish('NEW_POST', {newPost: post});
+      context.pubsub.publish("NEW_POST", { newPost: post });
       return post;
     },
     async deletePost(_, { postId }, context) {
@@ -51,12 +51,11 @@ module.exports = {
         const post = await Post.findById(postId);
         if (user.username === post.username) {
           await post.delete();
-          return 'Post deleted successfully';
+          return "Post deleted successfully";
         } else {
-          throw new AuthenticationError('Action not allowed');
+          throw new AuthenticationError("Action not allowed");
         }
-      }
-      catch (err) {
+      } catch (err) {
         throw new Error(err);
       }
     },
@@ -65,25 +64,25 @@ module.exports = {
 
       const post = await Post.findById(postId);
       if (post) {
-        if (post.likes.find(like => like.username === username)) {
-          // post already likes, unlike it    
-          post.likes = post.likes.filter(like => like.username !== username);
+        if (post.likes.find((like) => like.username === username)) {
+          // post already likes, unlike it
+          post.likes = post.likes.filter((like) => like.username !== username);
           await post.save();
         } else {
-          // not liked, like post 
+          // not liked, like post
           post.likes.push({
             username,
-            createdAt: new Date().toISOString()
-          })
+            createdAt: new Date().toISOString(),
+          });
         }
         await post.save();
         return post;
-      } else throw new UserInputError('User not found ')
-      }
+      } else throw new UserInputError("User not found ");
     },
-    Subscription: {
-      newPost: {
-        subscribe: (_, __,{pubsub}) => pubsub.asyncIterator('NEW_POST')
-      }
-    }
-  };
+  },
+  Subscription: {
+    newPost: {
+      subscribe: (_, __, { pubsub }) => pubsub.asyncIterator("NEW_POST"),
+    },
+  },
+};
