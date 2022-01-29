@@ -6,7 +6,7 @@ import { useMutation } from "@apollo/react-hooks";
 import { useForm } from "../util/hooks";
 import { FETCH_POSTS_QUERY } from "../util/graphql";
 
-export default function PostForm() {
+function PostForm() {
   const { values, onChange, onSubmit } = useForm(createPostCallback, {
     body: "",
   });
@@ -44,12 +44,13 @@ export default function PostForm() {
           </Button>
         </Form.Field>
       </Form>
-      {error &&
-        error.graphQLErrors.forEach((graphQLError) => {
-          return graphQLError
-            ? graphQLError.message
-            : "Error message not found.";
-        })}
+      {error && (
+        <div className="ui error message" style={{ marginBottom: 20 }}>
+          <ul className="list">
+            <li>{error.graphQLErrors[0].message}</li>
+          </ul>
+        </div>
+      )}
     </>
   );
 }
@@ -77,3 +78,5 @@ const CREATE_POST_MUTATION = gql`
     }
   }
 `;
+
+export default PostForm;
